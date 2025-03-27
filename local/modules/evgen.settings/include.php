@@ -13,3 +13,10 @@ $eventManager->addEventHandler('iblock', 'OnAfterIblockElementAdd', [
     'Evgen\Settings\EventHandlers\Iblock',
     'onNewsAdd'
 ]);
+
+//Highload event
+$eventManager->addEventHandler('', 'SearchHistoryOnBeforeAdd', [
+    'Evgen\Settings\EventHandlers\SearchHistory',
+    'saveQuerySearchHistory'
+]);
+
