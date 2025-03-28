@@ -1,0 +1,11 @@
+<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+use Bitrix\Main\Localization\Loc;
+
+$arComponentDescription = [
+	'NAME' => Loc::getMessage('NOTIFICATION_LIST_COMPONENT_NAME'),
+	'CACHE_PATH' => 'Y',
+	'SORT' => 10,
+	'PATH' => [
+		'ID' => 'evgen',
+	],
+];

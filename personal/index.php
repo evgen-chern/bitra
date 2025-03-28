@@ -1,7 +1,8 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Персональный раздел");
-?><?$APPLICATION->IncludeComponent(
+?>
+<?$APPLICATION->IncludeComponent(
 	"bitrix:sale.personal.section",
 	"bootstrap_v4",
 	Array(
@@ -11,6 +12,7 @@ $APPLICATION->SetTitle("Персональный раздел");
 		"ACCOUNT_PAYMENT_SELL_TOTAL" => array("100","200","500","1000","5000",""),
 		"ACCOUNT_PAYMENT_SELL_USER_INPUT" => "Y",
 		"ACTIVE_DATE_FORMAT" => "d.m.Y",
+		"ALLOW_INNER" => "N",
 		"CACHE_GROUPS" => "Y",
 		"CACHE_TIME" => "3600",
 		"CACHE_TYPE" => "A",
@@ -19,6 +21,7 @@ $APPLICATION->SetTitle("Персональный раздел");
 		"CUSTOM_PAGES" => "",
 		"CUSTOM_SELECT_PROPS" => array(""),
 		"NAV_TEMPLATE" => "",
+		"ONLY_INNER_FULL" => "N",
 		"ORDER_HISTORIC_STATUSES" => array("F"),
 		"PATH_TO_BASKET" => "/personal/cart",
 		"PATH_TO_CATALOG" => "/catalog/",
@@ -30,17 +33,7 @@ $APPLICATION->SetTitle("Персональный раздел");
 		"SAVE_IN_SESSION" => "Y",
 		"SEF_FOLDER" => "/personal/",
 		"SEF_MODE" => "Y",
-		"SEF_URL_TEMPLATES" => array(
-			"account"=>"account/",
-			"index"=>"index.php",
-			"order_cancel"=>"cancel/#ID#",
-			"order_detail"=>"orders/#ID#",
-			"orders"=>"orders/",
-			"private"=>"private/",
-			"profile"=>"profiles/",
-			"profile_detail"=>"profiles/#ID#",
-			"subscribe"=>"subscribe/"
-		),
+		"SEF_URL_TEMPLATES" => array("account"=>"account/","index"=>"index.php","order_cancel"=>"cancel/#ID#","order_detail"=>"orders/#ID#","orders"=>"orders/","private"=>"private/","profile"=>"profiles/","profile_detail"=>"profiles/#ID#","subscribe"=>"subscribe/"),
 		"SEND_INFO_PRIVATE" => "N",
 		"SET_TITLE" => "Y",
 		"SHOW_ACCOUNT_COMPONENT" => "Y",
@@ -51,11 +44,23 @@ $APPLICATION->SetTitle("Персональный раздел");
 		"SHOW_ORDER_PAGE" => "Y",
 		"SHOW_PRIVATE_PAGE" => "Y",
 		"SHOW_PROFILE_PAGE" => "Y",
-		"ALLOW_INNER" => "N",
-		"ONLY_INNER_FULL" => "N",
 		"SHOW_SUBSCRIBE_PAGE" => "Y",
 		"USER_PROPERTY_PRIVATE" => array(),
 		"USE_AJAX_LOCATIONS_PROFILE" => "N"
 	)
-);?><br>
-	<br><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+);?><?$APPLICATION->IncludeComponent(
+	"evgen:notifications", 
+	".default", 
+	array(
+		"CACHE_TIME" => "36000000",
+		"CACHE_TYPE" => "A",
+		"SEF_MODE" => "Y",
+		"COMPONENT_TEMPLATE" => ".default",
+		"SEF_FOLDER" => "/personal/",
+		"SEF_URL_TEMPLATES" => array(
+			"list" => "",
+			"detail" => "#ID#/",
+		)
+	),
+	false
+);?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
