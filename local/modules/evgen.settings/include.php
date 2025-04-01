@@ -31,3 +31,11 @@ $ormEventManager->addEventHandler(
         'onAfterDelete'
     ]);
 
+$ormEventManager->addEventHandler(
+    Evgen\Settings\Orm\NotificationTable::class,
+    Bitrix\Main\ORM\Data\DataManager::EVENT_ON_AFTER_UPDATE,
+    [
+        Evgen\Settings\EventHandlers\Notification::class,
+        'clearNotifyCache'
+    ]);
+

@@ -30,29 +30,50 @@ class NotificationDetail extends CBitrixComponent
 			return;
 		}
 
-		$this->arResult['NOTIFICATION'] = $this->getNotification($userId, $notificationId);
-		if (empty($this->arResult['NOTIFICATION']))
-		{
-			$this->process404();
-			return;
-		}
+        if ($this->isSetImportantRequest())
+        {
+            $notification = $this->getNotification($userId, $notificationId);
+            if (empty($notification)) {
+                $this->process404();
+                return;
+            }
+            $value = !$notification['IS_IMPORTANT'];
+            NotificationTable::update($notificationId, ['IS_IMPORTANT' => $value]);
+            LocalRedirect($APPLICATION->GetCurPage());
+        }
 
-		if ($this->isSetImportantRequest())
-		{
-			$value = !$this->arResult['NOTIFICATION']['IS_IMPORTANT'];
-			NotificationTable::update($notificationId, ['IS_IMPORTANT' => $value]);
-			LocalRedirect($APPLICATION->GetCurPage());
-		}
+        $cacheId = serialize([
+            'USER_ID' => $userId,
+        ]);
+        /*Авто стандартный*/
+        if ($this->startResultCache(false,$cacheId)) {
+            $this->arResult['NOTIFICATION'] = $this->getNotification($userId, $notificationId);
+            if (empty($this->arResult['NOTIFICATION']))
+            {
+                $this->abortResultCache();
+                $this->process404();
+                return;
+            }
+            /*Управляемый / Теггированный кэш*/
+            if (defined('BX_COMP_MANAGED_CACHE')) {
+                $taggedCache = Application::getInstance()->getTaggedCache();
+                $taggedCache->registerTag('notify_id' . $notificationId);
+            }
 
-		$this->arResult['DISPLAY_VALUES'] = $this->getDisplayValues($this->arResult['NOTIFICATION']);
-		$this->arResult['LIST_URL'] = htmlspecialcharsbx($this->arParams['LIST_URL']);
 
-		$this->includeComponentTemplate();
+            $this->arResult['DISPLAY_VALUES'] = $this->getDisplayValues($this->arResult['NOTIFICATION']);
+            $this->arResult['LIST_URL'] = htmlspecialcharsbx($this->arParams['LIST_URL']);
 
-		if (!$this->arResult['NOTIFICATION']['IS_READ'])
-		{
-			NotificationTable::update($notificationId, ['IS_READ' => true]);
-		}
+            if (!$this->arResult['NOTIFICATION']['IS_READ'])
+            {
+                $this->abortResultCache();
+                NotificationTable::update($notificationId, ['IS_READ' => true]);
+            }
+
+            $this->includeComponentTemplate();
+        }
+
+
 
 		if ($this->arResult['DISPLAY_VALUES']['TITLE'])
 		{
